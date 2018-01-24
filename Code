@@ -1,0 +1,55 @@
+# Bash-PreProject1
+#! /bin/bash
+
+#---------------------------------------
+# $Author: ee364f09 $
+# $Date: 2018-01-14 17:42:54 -0500 (Sun, 14 Jan 2018) $
+#---------------------------------------
+
+# Do not modify above this line.
+fileName=$1 #file name
+sportInput=$2 #sport name
+athletes=0
+medalsWon=0
+count=0
+medalsMax=0
+
+
+if [[ $# != 2 ]];
+then
+	echo "Usage: ./collect_stats.bash <file> <sport>"
+	echo ""
+	exit 1
+fi
+
+if  [[ ! -e $1 ]];
+then
+	echo "Error: $1 does not exist" 
+	echo ""
+	exit 2
+fi
+
+while read line
+do
+	player=$(echo "$line" | cut -d, -f1)
+	sport=$(echo "$line" | cut -d, -f2)
+	medalCount=$(echo "$line" | cut -d, -f3)
+
+if [[ $sport = $sportInput ]]
+	then
+		((++athletes))
+		((medalsWon=medalCount+medalsWon))
+		if (( medalCount > medalsMax )) 
+		then
+			medalsMax=$medalCount
+			winner=$player
+		fi
+fi
+
+
+done <$fileName
+
+echo "Total athletes: $athletes"
+echo "Total medals won: $medalsWon"
+echo "$winner won the most medals: $medalsMax"
+
